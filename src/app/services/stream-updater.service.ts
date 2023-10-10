@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { Observable, Subject, delay, share } from "rxjs";
+import { Observable, Subject, Subscription, delay, share } from "rxjs";
 import { zip } from "../utils/functions";
 
 @Injectable({
@@ -16,10 +16,15 @@ export class StreamUpdaterService {
 
   public readonly streams: ReadonlyArray<Subject<number>>;
 
+  private subscriptions: ReadonlyArray<Subscription> | null = null;
+
   public updateStreams(): void {
-    const newStreams = this.fetchStreams();
-    zip(this.streams, newStreams)
-      .forEach(([stream, newStream]) =>
+    if (this.subscriptions !== null) {
+      this.subscriptions.forEach(newStream => newStream.unsubscribe())
+    }
+    const newStreams$ = this.fetchStreams();
+    this.subscriptions = zip(this.streams, newStreams$)
+      .map(([stream, newStream]) =>
         newStream.subscribe(newValue => stream.next(newValue))
       );
   }
