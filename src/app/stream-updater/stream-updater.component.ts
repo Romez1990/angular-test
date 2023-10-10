@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { StreamUpdaterService } from "../services/stream-updater.service";
-import { Observable } from "rxjs";
+import { Subject } from "rxjs";
 
 @Component({
   selector: 'app-stream-updater',
@@ -9,10 +9,11 @@ import { Observable } from "rxjs";
 })
 export class StreamUpdaterComponent {
   public constructor(private streamUpdater: StreamUpdaterService) {
-    this.streams = this.streamUpdater.fetchStreams();
+    this.streams = this.streamUpdater.streams;
+    this.updateStreams();
   }
 
-  public streams: ReadonlyArray<Observable<number>>;
+  public readonly streams: ReadonlyArray<Subject<number>>;
 
   public readonly ordinals: ReadonlyArray<string> = [
     'first',
@@ -28,6 +29,6 @@ export class StreamUpdaterComponent {
   ];
 
   public updateStreams(): void {
-    this.streams = this.streamUpdater.fetchStreams();
+    this.streamUpdater.updateStreams()
   }
 }
