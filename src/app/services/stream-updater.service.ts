@@ -14,6 +14,7 @@ export class StreamUpdaterService {
       .map(_ => new Subject());
   }
 
+  private readonly streamsCount = 3;
   public readonly streams: ReadonlyArray<Subject<number>>;
 
   private subscriptions: ReadonlyArray<Subscription> | null = null;
@@ -29,7 +30,6 @@ export class StreamUpdaterService {
       );
   }
 
-  private readonly streamsCount = 3;
   private readonly interval = 130;
 
   private fetchStreams(): ReadonlyArray<Observable<number>> {
