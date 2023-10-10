@@ -1,0 +1,6 @@
+<div class="row">
+  <div *ngFor="let stream of streams; index as i">
+    {{ ordinals[i] | titlecase }} stream {{ stream | async }}
+  </div>
+</div>
+<input type="button" value="update" (click)="updateStreams()">
